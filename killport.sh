@@ -1,2 +1,0 @@
-#!/bin/bash
-fuser -k 7540/tcp 
