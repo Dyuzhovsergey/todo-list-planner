@@ -11,8 +11,8 @@ const (
 )
 
 func Run() error {
-	fs := http.FileServer(http.Dir(webDir))
-	http.Handle("/", fs)
+	fileHandler := http.FileServer(http.Dir(webDir))
+	http.Handle("/", fileHandler)
 
 	fmt.Printf("Server started at http://localhost%s\n", httpPort)
 	return http.ListenAndServe(httpPort, nil)
