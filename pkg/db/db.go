@@ -2,31 +2,40 @@ package db
 
 import (
 	"database/sql"
-	"modernc.org/sqlite"
 	"os"
 )
 
+var db *sql.DB
 
-dbFile := "scheduler.db"
-_, err := os.Stat(dbFile)
+const schema = `
+CREATE TABLE scheduler (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	date CHAR(8) NOT NULL DEFAULT "",
+	title VARCHAR(255) NOT NULL DEFAULT "",
+	comment TEXT NOT NULL DEFAULT "",
+	repeat VARCHAR(128) NOT NULL DEFAULT ""
+);
+CREATE INDEX idx_scheduler_date ON scheduler(date);
+`
 
-install := os.IsNotExist(err)
-
-	// Открываем или создаём базу данных
-	db, err := sql.Open("sqlite3", dbFile)
+func Init(dbFile string) error {
+	_, err := os.Stat(dbFile)
+	install := false
 	if err != nil {
-		log.Fatal(err)
+		install = true
 	}
-	defer db.Close()
 
-	// Если файла не было, создаём таблицу и индексы
+	db, err := sql.Open("sqlite", dbFile)
+	if err != nil {
+		return err
+	}
+
 	if install {
-		createTableSQL := `
-		CREATE TABLE IF NOT EXISTS scheduler (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			task_name TEXT NOT NULL,
-			schedule_time DATETIME NOT NULL,
-			status TEXT DEFAULT 'pending'
-		);
-		CREATE INDEX IF NOT EXISTS idx_schedule_time ON scheduler(schedule_time);
-		`
+		_, err := db.Exec(schema)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
