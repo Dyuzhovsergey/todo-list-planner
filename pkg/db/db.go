@@ -1,8 +1,10 @@
 package db
 
 import (
-	"database/sql"
+	"log"
 	"os"
+
+	"database/sql"
 
 	_ "modernc.org/sqlite"
 )
@@ -38,6 +40,6 @@ func Init(dbFile string) error {
 			return err
 		}
 	}
-
+	log.Printf("using database file: %s", dbFile)
 	return nil
 }

@@ -2,19 +2,22 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/Dyuzhovsergey/todo-list-project/pkg/db"
 	"github.com/Dyuzhovsergey/todo-list-project/pkg/server"
 )
 
 const (
-	dbFile = "scheduler.db"
+	defaultDBFile = "scheduler.db"
 )
 
 func main() {
-
-	err := db.Init(dbFile)
-	if err != nil {
+	dbFile := os.Getenv("TODO_DBFILE")
+	if dbFile == "" {
+		dbFile = defaultDBFile
+	}
+	if err := db.Init(dbFile); err != nil {
 		log.Fatalf("cannot init database: %v", err)
 	}
 
