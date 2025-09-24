@@ -34,6 +34,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		for !date.After(now) {
 			date = date.AddDate(0, 0, interval)
 		}
+
 	case "y":
 		if len(parts) != 1 {
 			return "", errors.New("invalid repeat formal for 'y'")
@@ -41,6 +42,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		for !date.After(now) {
 			date = date.AddDate(1, 0, 0)
 		}
+
 	case "w":
 		if len(parts) != 2 {
 			return "", errors.New("invalid repaet format for 'w'")
@@ -57,6 +59,10 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		}
 		for !date.After(now) || week[weekdayGoToRule(date.Weekday())] {
 			date = date.AddDate(0, 0, 1)
+		}
+	case "m":
+		if len(parts) < 2 || len(parts) > 3 {
+			return "", errors.New("invalid repeat format for 'm'")
 		}
 
 	default:
