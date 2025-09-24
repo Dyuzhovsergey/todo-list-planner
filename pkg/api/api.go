@@ -60,11 +60,16 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		for !date.After(now) || week[weekdayGoToRule(date.Weekday())] {
 			date = date.AddDate(0, 0, 1)
 		}
+
 	case "m":
 		if len(parts) < 2 || len(parts) > 3 {
 			return "", errors.New("invalid repeat format for 'm'")
 		}
-		days := strings.Split(parts[1], ",")
+	// 	var day [32]bool
+	// 	var month [13]bool
+
+	// 	days := strings.Split(parts[1], ",")
+	// 	months := strings.Split(parts[2], ",")
 
 	default:
 		return "", errors.New("nsupported repeat format")
