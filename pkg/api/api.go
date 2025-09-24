@@ -65,11 +65,42 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		if len(parts) < 2 || len(parts) > 3 {
 			return "", errors.New("invalid repeat format for 'm'")
 		}
-	// 	var day [32]bool
-	// 	var month [13]bool
+		var days [32]bool
+		var dayLast, dayPrevLast bool
 
-	// 	days := strings.Split(parts[1], ",")
-	// 	months := strings.Split(parts[2], ",")
+		daysStr := strings.Split(parts[1], ",")
+		for _, ds := range daysStr {
+			day, err := strconv.Atoi(ds)
+			if err != nil {
+				return "", errors.New("invalid day in month")
+			}
+			switch {
+			case day >= 1 && day <= 31:
+				days[day] = true
+			case day == -1:
+				dayLast = true
+			case day == -2:
+				dayPrevLast = true
+			default:
+				return "", errors.New("invalid day in month")
+			}
+		}
+
+		var months [13]bool
+		if len(parts) == 3 {
+			monthsStr := strings.Split(parts[2], ",")
+			for _, ms := range monthsStr {
+				month, err := strconv.Atoi(ms)
+				if err != nil || month < 1 || month > 12 {
+					return "", errors.New("invalid month")
+				}
+				months[month] = true
+			}
+		} else {
+			for i := 1; i <= 12; i++ {
+				months[i] = true
+			}
+		}
 
 	default:
 		return "", errors.New("nsupported repeat format")
