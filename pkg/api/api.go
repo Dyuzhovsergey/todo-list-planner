@@ -64,6 +64,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		if len(parts) < 2 || len(parts) > 3 {
 			return "", errors.New("invalid repeat format for 'm'")
 		}
+		days := strings.Split(parts[1], ",")
 
 	default:
 		return "", errors.New("nsupported repeat format")
