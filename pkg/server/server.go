@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+
+	"github.com/Dyuzhovsergey/todo-list-project/pkg/api"
 )
 
 const (
@@ -16,11 +18,13 @@ func Run() error {
 	if httpPort == "" {
 		httpPort = defaultHttpPort
 	}
-	addr := ":" + httpPort
+
+	api.Init()
 
 	fileHandler := http.FileServer(http.Dir(webDir))
 	http.Handle("/", fileHandler)
 
+	addr := ":" + httpPort
 	fmt.Printf("Server TODO started at http://localhost%s\n", addr)
 	return http.ListenAndServe(addr, nil)
 }

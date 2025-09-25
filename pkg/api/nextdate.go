@@ -2,20 +2,25 @@ package api
 
 import (
 	"errors"
+	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
 )
 
+const DateLayout = "20060102"
+
 // now    — время, от которого ищется ближайшая дата
 // dstart — исходное время в формате 20060102, от которого начинается отсчёт повторений
 // repeat — правило повторения в описанном выше формате ("d <число>", "y", "w" - неделя)
 func NextDate(now time.Time, dstart string, repeat string) (string, error) {
+	fmt.Printf("DEBUG: now=%s, dstart=%q, repeat=%q\n", now.Format("20060102"), dstart, repeat)
 	if repeat == "" {
 		return "", errors.New("reeat rule is empty")
 	}
 
-	date, err := time.Parse("20060102", dstart)
+	date, err := time.Parse(DateLayout, dstart)
 	if err != nil {
 		return "", errors.New("erroe parse dstart, invalid start date format")
 	}
@@ -27,8 +32,13 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 			return "", errors.New("invalid repeat format  for 'd'")
 		}
 		interval, err := strconv.Atoi(parts[1])
+
 		if err != nil || interval <= 0 || interval > 400 {
 			return "", errors.New("invalid day interval")
+		}
+
+		if date.Format(DateLayout) == dstart && date.After(now) {
+			date = date.AddDate(0, 0, interval)
 		}
 
 		for !date.After(now) {
@@ -38,6 +48,10 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	case "y":
 		if len(parts) != 1 {
 			return "", errors.New("invalid repeat formal for 'y'")
+		}
+		if date.After(now) {
+			// если старт позже now, то нужно не его, а следующий
+			date = date.AddDate(1, 0, 0)
 		}
 		for !date.After(now) {
 			date = date.AddDate(1, 0, 0)
@@ -59,6 +73,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		}
 		for !date.After(now) || week[weekdayGoToRule(date.Weekday())] {
 			date = date.AddDate(0, 0, 1)
+
 		}
 
 	case "m":
@@ -109,22 +124,22 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 				if days[d] {
 					condidateDay := time.Date(year, month, d, 0, 0, 0, 0, time.UTC)
 					if condidateDay.After(now) && months[int(month)] {
-						return condidateDay.Format("20060102"), nil
+						return condidateDay.Format(DateLayout), nil
 					}
 				}
-
 			}
+
 			if dayLast {
 				condidateDay := time.Date(year, month, dim, 0, 0, 0, 0, time.UTC)
 				if condidateDay.After(now) && months[int(month)] {
-					return condidateDay.Format("20060102"), nil
+					return condidateDay.Format(DateLayout), nil
 				}
 			}
 
 			if dayPrevLast && dim > 1 {
 				condidateDay := time.Date(year, month, dim-1, 0, 0, 0, 0, time.UTC)
 				if condidateDay.After(now) && months[int(month)] {
-					return condidateDay.Format("20060102"), nil
+					return condidateDay.Format(DateLayout), nil
 				}
 			}
 
@@ -135,7 +150,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		return "", errors.New("nsupported repeat format")
 	}
 
-	return date.Format("20060102"), nil
+	return date.Format(DateLayout), nil
 }
 
 func weekdayGoToRule(w time.Weekday) int {
@@ -147,4 +162,32 @@ func weekdayGoToRule(w time.Weekday) int {
 
 func daysInMonth(year int, month time.Month) int {
 	return time.Date(year, month+1, 0, 0, 0, 0, 0, time.UTC).Day()
+}
+
+func nextDateHandler(w http.ResponseWriter, r *http.Request) {
+	nowStr := r.FormValue("now")
+	dstart := r.FormValue("date")
+	repeat := r.FormValue("repeat")
+
+	var now time.Time
+	var err error
+
+	if nowStr == "" {
+		now = time.Now()
+	} else {
+		now, err = time.Parse(DateLayout, nowStr)
+		if err != nil {
+			http.Error(w, "invalid now format, expected YYYYMMDD", http.StatusBadRequest)
+			return
+		}
+	}
+
+	// вызов твоей функции NextDate
+	next, err := NextDate(now, dstart, repeat)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Write([]byte(next))
 }

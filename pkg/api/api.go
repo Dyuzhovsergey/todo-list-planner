@@ -5,5 +5,5 @@ import (
 )
 
 func Init() {
-	http.HandleFunc("/api/nextdate", nextDayHandler)
+	http.HandleFunc("/api/nextdate", nextDateHandler)
 }
