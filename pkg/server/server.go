@@ -24,7 +24,7 @@ func Run() error {
 		httpPort = defaultHttpPort
 	}
 
-	api.Init()
+	api.InitHandlers()
 	registerStatic()
 
 	addr := ":" + httpPort

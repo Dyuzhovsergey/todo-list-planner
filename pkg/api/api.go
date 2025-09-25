@@ -4,6 +4,7 @@ import (
 	"net/http"
 )
 
-func Init() {
+func InitHandlers() {
 	http.HandleFunc("/api/nextdate", nextDateHandler)
+	http.HandleFunc("/api/task", taskHandler)
 }
