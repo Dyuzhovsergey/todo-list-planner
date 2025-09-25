@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -14,7 +13,6 @@ const DateLayout = "20060102"
 // dstart — исходное время в формате 20060102, от которого начинается отсчёт повторений
 // repeat — правило повторения в описанном выше формате ("d <число>", "y", "w" - неделя)
 func NextDate(now time.Time, dstart string, repeat string) (string, error) {
-	fmt.Printf("DEBUG: now=%s, dstart=%q, repeat=%q\n", now.Format("20060102"), dstart, repeat)
 	if repeat == "" {
 		return "", errors.New("reeat rule is empty")
 	}
@@ -146,7 +144,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		}
 
 	default:
-		return "", errors.New("nsupported repeat format")
+		return "", errors.New("unsupported repeat format")
 	}
 
 	return date.Format(DateLayout), nil
