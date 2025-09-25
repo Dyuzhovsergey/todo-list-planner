@@ -13,6 +13,11 @@ const (
 	defaultHttpPort = "7540"
 )
 
+func registerStatic() {
+	fileHandler := http.FileServer(http.Dir(webDir))
+	http.Handle("/", fileHandler)
+}
+
 func Run() error {
 	httpPort := os.Getenv("TODO_PORT")
 	if httpPort == "" {
@@ -20,9 +25,7 @@ func Run() error {
 	}
 
 	api.Init()
-
-	fileHandler := http.FileServer(http.Dir(webDir))
-	http.Handle("/", fileHandler)
+	registerStatic()
 
 	addr := ":" + httpPort
 	fmt.Printf("Server TODO started at http://localhost%s\n", addr)

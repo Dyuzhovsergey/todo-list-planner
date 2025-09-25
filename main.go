@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	defaultDBFile = "scheduler.db"
+	defaultDBFile = "data/scheduler.db"
 )
 
 func main() {
