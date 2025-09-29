@@ -20,11 +20,9 @@ func main() {
 	if err := db.Init(dbFile); err != nil {
 		log.Fatalf("cannot init database: %v", err)
 	}
-
 	defer db.DB.Close()
 
 	if err := server.Run(); err != nil {
 		log.Fatalf("cannot run server: %v", err)
 	}
-
 }

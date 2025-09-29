@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -11,11 +12,15 @@ import (
 )
 
 func addTaskHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("addTaskHandler called")
 	var task db.Task
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
+		log.Println("decode error:", err)
 		writeJSON(w, map[string]string{"error": "error parse JSON: " + err.Error()})
 		return
 	}
+
+	log.Printf("decoded task: %+v\n", task)
 
 	if task.Title == "" {
 		writeJSON(w, map[string]string{"error": "title task is empty"})
@@ -23,11 +28,13 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := checkDate(&task); err != nil {
+		log.Println("checkDate error:", err)
 		writeJSON(w, map[string]string{"error": err.Error()})
 		return
 	}
 	id, err := db.AddTask(&task)
 	if err != nil {
+		log.Println("AddTask error:", err)
 		writeJSON(w, map[string]string{"error": "error add task" + err.Error()})
 		return
 	}

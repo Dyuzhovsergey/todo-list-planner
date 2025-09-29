@@ -23,7 +23,8 @@ CREATE INDEX IF NOT EXISTS idx_scheduler_date ON scheduler(date);
 `
 
 func Init(dbFile string) error {
-	DB, err := sql.Open("sqlite", dbFile)
+	var err error
+	DB, err = sql.Open("sqlite", dbFile)
 	if err != nil {
 		return err
 	}
