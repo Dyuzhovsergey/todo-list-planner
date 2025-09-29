@@ -21,6 +21,8 @@ func main() {
 		log.Fatalf("cannot init database: %v", err)
 	}
 
+	defer db.DB.Close()
+
 	if err := server.Run(); err != nil {
 		log.Fatalf("cannot run server: %v", err)
 	}

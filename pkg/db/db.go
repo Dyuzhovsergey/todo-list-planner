@@ -1,44 +1,37 @@
+// Package db for create table
 package db
 
 import (
 	"log"
-	"os"
 
 	"database/sql"
 
 	_ "modernc.org/sqlite"
 )
 
-var db *sql.DB
+var DB *sql.DB
 
 const schema = `
-CREATE TABLE scheduler (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	date CHAR(8) NOT NULL DEFAULT "",
-	title VARCHAR(255) NOT NULL DEFAULT "",
-	comment TEXT NOT NULL DEFAULT "",
-	repeat VARCHAR(128) NOT NULL DEFAULT ""
+CREATE TABLE IF NOT EXISTS scheduler (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date CHAR(8) NOT NULL DEFAULT "",
+    title VARCHAR(255) NOT NULL DEFAULT "",
+    comment TEXT NOT NULL DEFAULT "",
+    repeat VARCHAR(128) NOT NULL DEFAULT ""
 );
-CREATE INDEX idx_scheduler_date ON scheduler(date);
+CREATE INDEX IF NOT EXISTS idx_scheduler_date ON scheduler(date);
 `
 
 func Init(dbFile string) error {
-	_, err := os.Stat(dbFile)
-	install := false
-	if err != nil {
-		install = true
-	}
-
-	db, err = sql.Open("sqlite", dbFile)
+	DB, err := sql.Open("sqlite", dbFile)
 	if err != nil {
 		return err
 	}
-
-	if install {
-		_, err := db.Exec(schema)
-		if err != nil {
-			return err
-		}
+	if err = DB.Ping(); err != nil {
+		return err
+	}
+	if _, err := DB.Exec(schema); err != nil {
+		return err
 	}
 	log.Printf("using database file: %s", dbFile)
 	return nil

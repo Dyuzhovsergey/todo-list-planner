@@ -1,3 +1,4 @@
+// Package server for create server work
 package server
 
 import (
@@ -10,7 +11,7 @@ import (
 
 const (
 	webDir          = "web"
-	defaultHttpPort = "7540"
+	defaultHTTPPort = "7540"
 )
 
 func registerStatic() {
@@ -21,7 +22,7 @@ func registerStatic() {
 func Run() error {
 	httpPort := os.Getenv("TODO_PORT")
 	if httpPort == "" {
-		httpPort = defaultHttpPort
+		httpPort = defaultHTTPPort
 	}
 
 	api.InitHandlers()

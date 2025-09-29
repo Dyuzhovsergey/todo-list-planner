@@ -1,3 +1,4 @@
+// Package tests fot testing
 package tests
 
 var Port = 7540

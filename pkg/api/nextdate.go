@@ -9,7 +9,7 @@ import (
 
 const DateLayout = "20060102"
 
-// now    — время, от которого ищется ближайшая дата
+// NextDate now    — время, от которого ищется ближайшая дата
 // dstart — исходное время в формате 20060102, от которого начинается отсчёт повторений
 // repeat — правило повторения в описанном выше формате ("d <число>", "y", "w" - неделя)
 func NextDate(now time.Time, dstart string, repeat string) (string, error) {
