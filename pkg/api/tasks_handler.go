@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Dyuzhovsergey/todo-list-project/pkg/bl"
 	"github.com/Dyuzhovsergey/todo-list-project/pkg/db"
 )
 
@@ -30,9 +31,9 @@ func getTasksHandler(w http.ResponseWriter, r *http.Request) {
 
 	tasks, err := db.TasksWithSearch(limit, search)
 	if err != nil {
-		writeError(w, err, http.StatusInternalServerError)
+		bl.WriteError(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	writeJSON(w, TasksResp{Tasks: tasks})
+	bl.WriteJSON(w, TasksResp{Tasks: tasks})
 }

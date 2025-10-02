@@ -1,4 +1,4 @@
-package api
+package bl
 
 import (
 	"encoding/json"
@@ -10,20 +10,20 @@ import (
 	"github.com/Dyuzhovsergey/todo-list-project/pkg/db"
 )
 
-func writeJSON(w http.ResponseWriter, data any) {
+func WriteJSON(w http.ResponseWriter, data any) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	enc := json.NewEncoder(w)
 	enc.SetEscapeHTML(false)
 	_ = enc.Encode(data)
 }
 
-func writeError(w http.ResponseWriter, err error, status int) {
+func WriteError(w http.ResponseWriter, err error, status int) {
 	log.Println("error:", err)
 	w.WriteHeader(status)
-	writeJSON(w, map[string]string{"error": err.Error()})
+	WriteJSON(w, map[string]string{"error": err.Error()})
 }
 
-func checkDate(task *db.Task) error {
+func CheckDate(task *db.Task) error {
 	now := time.Now()
 	todayTime := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
 	today := todayTime.Format(DateLayout)
