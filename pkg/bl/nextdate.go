@@ -1,3 +1,4 @@
+// Package bl for bisness logic project
 package bl
 
 import (
