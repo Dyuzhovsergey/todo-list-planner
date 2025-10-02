@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -25,9 +26,9 @@ func AddTask(task *Task) (int64, error) {
 }
 
 func GetTask(id string) (*Task, error) {
-	query := `SELECT id, date, title, comment, rapeat
+	query := `SELECT id, date, title, comment, repeat
 	FROM scheduler
-	WHERE id ?`
+	WHERE id = ?`
 
 	row := DB.QueryRow(query, id)
 	t := &Task{}
@@ -38,12 +39,18 @@ func GetTask(id string) (*Task, error) {
 		}
 		return nil, err
 	}
-	return t, err
+	return t, nil
 }
 
 func DeleteTask(id string) error {
-	query := `DELETE FROM scheduler WHERE id=?`
-	res, err := DB.Exec(query, id)
+	query := `DELETE FROM scheduler WHERE id = ?`
+
+	i, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return fmt.Errorf("invalid id: %w", err)
+	}
+
+	res, err := DB.Exec(query, i)
 	if err != nil {
 		return err
 	}
@@ -133,7 +140,8 @@ func TasksWithSearch(limit int, search string) ([]*Task, error) {
 }
 
 func UpdateDate(id string, nextDate string) error {
-	query := `UPDATE scheduler SET date=? WHERE id=?`
+	query := `UPDATE scheduler SET date = ? WHERE id = ?`
+
 	res, err := DB.Exec(query, nextDate, id)
 	if err != nil {
 		return err

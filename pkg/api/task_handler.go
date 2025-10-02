@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/Dyuzhovsergey/todo-list-project/pkg/db"
 )
@@ -84,15 +83,23 @@ func getTaskHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		http.Error(w, "", http.StatusMethodNotAllowed)
+		return
+	}
+
 	id := r.URL.Query().Get("id")
 	if id == "" {
 		writeError(w, fmt.Errorf("id task is empty"), http.StatusBadRequest)
 		return
 	}
+
 	if err := db.DeleteTask(id); err != nil {
 		writeError(w, err, http.StatusNotFound)
+		return
 	}
-	writeJSON(w, map[string]string{})
+
+	writeJSON(w, map[string]string{}) // {}
 }
 
 // PUT /api/task
@@ -129,48 +136,4 @@ func updateTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJSON(w, map[string]string{}) // пустой JSON {}
-}
-
-func doneTasksHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	id := r.URL.Query().Get("id")
-	if id == "" {
-		writeError(w, fmt.Errorf("id task is empty"), http.StatusBadRequest)
-		return
-	}
-
-	task, err := db.GetTask(id)
-	if err != nil {
-		writeError(w, err, http.StatusNotFound)
-		return
-	}
-
-	// если repeat пустой → одноразовая задача, удаляем
-	if task.Repeat == "" {
-		if err := db.DeleteTask(id); err != nil {
-			writeError(w, err, http.StatusInternalServerError)
-			return
-		}
-		writeJSON(w, map[string]string{}) // {}
-		return
-	}
-
-	// если задача периодическая → считаем следующую дату
-	next, err := NextDate(time.Now(), task.Date, task.Repeat)
-	if err != nil {
-		writeError(w, err, http.StatusBadRequest)
-		return
-	}
-
-	// обновляем дату
-	if err := db.UpdateDate(id, next); err != nil {
-		writeError(w, err, http.StatusInternalServerError)
-		return
-	}
-
-	writeJSON(w, map[string]string{}) // {}
 }
