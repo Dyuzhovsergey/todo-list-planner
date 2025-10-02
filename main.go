@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/Dyuzhovsergey/todo-list-project/pkg/config"
 	"github.com/Dyuzhovsergey/todo-list-project/pkg/db"
 	"github.com/Dyuzhovsergey/todo-list-project/pkg/server"
 )
@@ -13,6 +14,9 @@ const (
 )
 
 func main() {
+
+	config.Init()
+
 	dbFile := os.Getenv("TODO_DBFILE")
 	if dbFile == "" {
 		dbFile = defaultDBFile
