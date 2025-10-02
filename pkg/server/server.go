@@ -1,3 +1,4 @@
+// Package server for work logic server
 package server
 
 import (
@@ -11,7 +12,6 @@ import (
 const (
 	webDir          = "web"
 	defaultHTTPPort = "7540"
-	defaultDBFile   = "data/scheduler.db"
 )
 
 func registerStatic() {
