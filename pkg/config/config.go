@@ -15,7 +15,7 @@ var Cfg Config
 func Init() {
 	Cfg = Config{
 		Password: os.Getenv("TODO_PASSWORD"),
-		JWTKey:   []byte(os.Getenv("TODO_PASSWORD")),
+		JWTKey:   []byte(os.Getenv("TODO_SECRET")),
 	}
 	if len(Cfg.JWTKey) == 0 {
 		log.Println("TODO_SECRET not set! Used default key")
