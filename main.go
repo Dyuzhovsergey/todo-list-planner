@@ -8,10 +8,6 @@ import (
 	"github.com/Dyuzhovsergey/todo-list-project/pkg/server"
 )
 
-const (
-	defaultDBFile = "data/scheduler.db"
-)
-
 func main() {
 
 	config.Init()

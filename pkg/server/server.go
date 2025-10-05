@@ -9,10 +9,7 @@ import (
 	"github.com/Dyuzhovsergey/todo-list-project/pkg/config"
 )
 
-const (
-	webDir          = "web"
-	defaultHTTPPort = "7540"
-)
+const webDir = "web"
 
 func registerStatic() {
 	fileHandler := http.FileServer(http.Dir(webDir))
