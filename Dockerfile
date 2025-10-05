@@ -9,7 +9,6 @@ COPY . .
 
 RUN go build -o todo-server main.go
 
-
 FROM ubuntu:latest
 
 WORKDIR /app
