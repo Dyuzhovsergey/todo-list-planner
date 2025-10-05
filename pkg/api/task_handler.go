@@ -31,7 +31,8 @@ func taskHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func addTaskHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("addTaskHandler called")
+	defer r.Body.Close()
+
 	var task db.Task
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
 		log.Println("decode error:", err)
@@ -39,22 +40,18 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("decoded task: %+v\n", task)
-
 	if task.Title == "" {
 		bl.WriteError(w, fmt.Errorf("title task is empty"), http.StatusBadRequest)
 		return
 	}
 
 	if err := bl.CheckDate(&task); err != nil {
-		log.Println("checkDate error:", err)
 		bl.WriteError(w, err, http.StatusBadRequest)
 		return
 	}
 
 	id, err := db.AddTask(&task)
 	if err != nil {
-		log.Println("AddTask error:", err)
 		bl.WriteError(w, err, http.StatusInternalServerError)
 		return
 	}
@@ -103,6 +100,8 @@ func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateTaskHandler(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+
 	var task db.Task
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
 		bl.WriteError(w, fmt.Errorf("error parse JSON: %w", err), http.StatusBadRequest)
