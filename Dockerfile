@@ -1,4 +1,4 @@
-FROM golang:1.22 AS builder
+FROM golang:1.24 AS builder
 
 WORKDIR /app
 
@@ -21,8 +21,6 @@ RUN mkdir -p /app/data
 # Create env
 ENV TODO_PORT=7540
 ENV TODO_DBFILE=data/scheduler.db
-ENV TODO_PASSWORD=12345
-ENV TODO_SECRET=my_super_secret_key
 
 EXPOSE 7540
 
