@@ -19,6 +19,22 @@
 - Аутентификация пользователей по паролю с использованием JWT-токенов;
 - Обработка запросов через REST API.
 
+## Структура проекта
+
+todo-list-project/
+│── main.go
+├── pkg/
+│   ├── api/
+│   ├── auth/
+│   ├── config/
+│   ├── db/
+│   └── server/
+├── web/
+├── data/
+├── tests/
+├── go.mod
+└── README.md
+
 ## Что неоходимо для запуска:
 
 1. **Запуск на сервере:**
@@ -65,19 +81,3 @@ docker run -d -p 7540:7540 -e TODO_PASSWORD=12345 -e TODO_SECRET=my_super_secret
 **Использование:**
 
 В браузере нужно переити по адресу: [http://localhost:7540/login.html]()
-
-## Структура проекта
-
-todo-list-project/
-│── main.go
-├── pkg/
-│   ├── api/
-│   ├── auth/
-│   ├── config/
-│   ├── db/
-│   └── server/
-├── web/
-├── data/           
-├── tests/
-├── go.mod
-└── README.md
