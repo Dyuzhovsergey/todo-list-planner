@@ -9,7 +9,7 @@ import (
 )
 
 // AuthMiddleware оборачивает хэндлеры, требующие аутентификации
-func Auth(next http.HandlerFunc) http.HandlerFunc {
+func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if config.Cfg.Password == "" {
 			next(w, r)
