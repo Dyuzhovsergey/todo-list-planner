@@ -4,7 +4,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/auth"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/auth"
 )
 
 func InitHandlers() {

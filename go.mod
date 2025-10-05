@@ -1,4 +1,4 @@
-module github.com/Dyuzhovsergey/todo-list-project
+module github.com/Dyuzhovsergey/todo-list-planner
 
 go 1.24.1
 

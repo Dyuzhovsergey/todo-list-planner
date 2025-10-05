@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/db"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/db"
 )
 
 func WriteJSON(w http.ResponseWriter, data any) {

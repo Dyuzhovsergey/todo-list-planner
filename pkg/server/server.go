@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/api"
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/config"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/api"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/config"
 )
 
 const webDir = "web"

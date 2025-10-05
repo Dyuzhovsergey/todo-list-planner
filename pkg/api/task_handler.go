@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/bl"
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/db"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/bl"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/db"
 )
 
 func taskHandler(w http.ResponseWriter, r *http.Request) {

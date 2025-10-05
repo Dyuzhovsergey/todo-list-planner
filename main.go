@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/config"
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/db"
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/server"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/config"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/db"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/server"
 )
 
 func main() {

@@ -1,6 +1,0 @@
-#bash scripts
-killport.sh
-
-#DB
-data/scheduler.db
-

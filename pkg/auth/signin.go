@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/config"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/config"
 	"github.com/golang-jwt/jwt/v4"
 )
 

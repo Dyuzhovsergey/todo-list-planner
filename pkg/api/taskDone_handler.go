@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/bl"
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/db"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/bl"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/db"
 )
 
 func doneTasksHandler(w http.ResponseWriter, r *http.Request) {

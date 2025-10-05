@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/bl"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/bl"
 )
 
 func nextDateHandler(w http.ResponseWriter, r *http.Request) {

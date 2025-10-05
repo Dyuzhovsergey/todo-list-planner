@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 
-	"github.com/Dyuzhovsergey/todo-list-project/pkg/config"
+	"github.com/Dyuzhovsergey/todo-list-planner/pkg/config"
 )
 
 // AuthMiddleware оборачивает хэндлеры, требующие аутентификации
