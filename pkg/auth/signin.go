@@ -35,7 +35,7 @@ func SigninHandler(w http.ResponseWriter, r *http.Request) {
 		ExpiresAt: jwt.NewNumericDate(expirationTime),
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenStr, err := token.SignedString(config.Cfg.JWTKey)
 	if err != nil {
 		http.Error(w, "cannot generate token", http.StatusInternalServerError)

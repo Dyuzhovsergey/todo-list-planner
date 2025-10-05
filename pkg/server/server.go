@@ -4,9 +4,9 @@ package server
 import (
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/Dyuzhovsergey/todo-list-project/pkg/api"
+	"github.com/Dyuzhovsergey/todo-list-project/pkg/config"
 )
 
 const (
@@ -20,15 +20,10 @@ func registerStatic() {
 }
 
 func Run() error {
-	httpPort := os.Getenv("TODO_PORT")
-	if httpPort == "" {
-		httpPort = defaultHTTPPort
-	}
-
 	api.InitHandlers()
 	registerStatic()
 
-	addr := ":" + httpPort
+	addr := ":" + config.Cfg.HTTPPort
 	fmt.Printf("Server TODO started at http://localhost%s\n", addr)
 	return http.ListenAndServe(addr, nil)
 }
