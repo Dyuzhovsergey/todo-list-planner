@@ -14,7 +14,9 @@ func WriteJSON(w http.ResponseWriter, data any) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	enc := json.NewEncoder(w)
 	enc.SetEscapeHTML(false)
-	_ = enc.Encode(data)
+	if err := enc.Encode(data); err != nil {
+		log.Printf("WriteJSON error: %v", err)
+	}
 }
 
 func WriteError(w http.ResponseWriter, err error, status int) {
