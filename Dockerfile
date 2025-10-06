@@ -7,7 +7,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o todo-server main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o todo-server main.go
 
 FROM ubuntu:latest
 
