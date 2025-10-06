@@ -77,7 +77,7 @@ func UpdateTask(task *Task) error {
 
 	count, err := res.RowsAffected()
 	if err != nil {
-		return fmt.Errorf("rows affected failed: %w", err)
+		return fmt.Errorf("invalid id for updating task: %w", err)
 	}
 	if count == 0 {
 		return fmt.Errorf("no task with id %s: %w", task.ID, ErrTaskNotFound)
