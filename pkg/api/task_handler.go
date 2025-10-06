@@ -1,7 +1,6 @@
 package api
 
 import (
-	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -68,8 +67,8 @@ func getTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	task, err := db.GetTask(id)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			bl.WriteError(w, fmt.Errorf("task not fund"), http.StatusNotFound)
+		if errors.Is(err, db.ErrTaskNotFound) {
+			bl.WriteError(w, fmt.Errorf("task not found"), http.StatusNotFound)
 		} else {
 			bl.WriteError(w, err, http.StatusInternalServerError)
 		}
@@ -92,10 +91,13 @@ func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := db.DeleteTask(id); err != nil {
-		bl.WriteError(w, err, http.StatusNotFound)
+		if errors.Is(err, db.ErrTaskNotFound) {
+			bl.WriteError(w, err, http.StatusNotFound)
+		} else {
+			bl.WriteError(w, err, http.StatusInternalServerError)
+		}
 		return
 	}
-
 	bl.WriteJSON(w, map[string]string{})
 }
 

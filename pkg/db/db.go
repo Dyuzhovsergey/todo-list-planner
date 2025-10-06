@@ -2,6 +2,7 @@
 package db
 
 import (
+	"errors"
 	"log"
 
 	"database/sql"
@@ -10,6 +11,7 @@ import (
 )
 
 var DB *sql.DB
+var ErrTaskNotFound = errors.New("task not found")
 
 const schema = `
 CREATE TABLE IF NOT EXISTS scheduler (

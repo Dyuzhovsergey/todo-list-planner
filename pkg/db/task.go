@@ -35,7 +35,7 @@ func GetTask(id string) (*Task, error) {
 	err := row.Scan(&t.ID, &t.Date, &t.Title, &t.Comment, &t.Repeat)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("task %s not found", id)
+			return nil, fmt.Errorf("task %s not found: %w", id, ErrTaskNotFound)
 		}
 		return nil, err
 	}
@@ -52,15 +52,15 @@ func DeleteTask(id string) error {
 
 	res, err := DB.Exec(query, i)
 	if err != nil {
-		return err
+		return fmt.Errorf("delete task failed: %w", err)
 	}
 	count, err := res.RowsAffected()
 	if err != nil {
-		return err
+		return fmt.Errorf("rows affected failed: %w", err)
 	}
 
 	if count == 0 {
-		return fmt.Errorf("incorrect id for deleting task")
+		return fmt.Errorf("no task with id %s: %w", id, ErrTaskNotFound)
 	}
 	return nil
 }
