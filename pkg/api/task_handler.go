@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/Dyuzhovsergey/todo-list-planner/pkg/bl"
 	"github.com/Dyuzhovsergey/todo-list-planner/pkg/db"
@@ -126,7 +125,7 @@ func updateTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := db.UpdateTask(&task); err != nil {
-		if strings.Contains(err.Error(), "incorrect id") {
+		if errors.Is(err, db.ErrTaskNotFound) {
 			bl.WriteError(w, err, http.StatusNotFound)
 		} else {
 			bl.WriteError(w, err, http.StatusInternalServerError)

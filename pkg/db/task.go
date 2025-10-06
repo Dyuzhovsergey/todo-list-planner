@@ -72,15 +72,15 @@ func UpdateTask(task *Task) error {
 
 	res, err := DB.Exec(query, task.Date, task.Title, task.Comment, task.Repeat, task.ID)
 	if err != nil {
-		return err
+		return fmt.Errorf("rows affected failed: %w", err)
 	}
 
 	count, err := res.RowsAffected()
 	if err != nil {
-		return err
+		return fmt.Errorf("rows affected failed: %w", err)
 	}
 	if count == 0 {
-		return fmt.Errorf("incorrect id for updating task")
+		return fmt.Errorf("no task with id %s: %w", task.ID, ErrTaskNotFound)
 	}
 	return nil
 }
