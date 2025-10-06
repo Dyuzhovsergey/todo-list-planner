@@ -27,7 +27,7 @@ func nextDateHandler(w http.ResponseWriter, r *http.Request) {
 
 	next, err := bl.NextDate(now, dstart, repeat)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
