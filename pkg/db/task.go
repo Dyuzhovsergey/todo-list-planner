@@ -133,6 +133,10 @@ func TasksWithSearch(limit int, search string) ([]*Task, error) {
 		tasks = append(tasks, t)
 	}
 
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error while iterating over rows: %w", err)
+	}
+
 	if tasks == nil {
 		tasks = []*Task{}
 	}

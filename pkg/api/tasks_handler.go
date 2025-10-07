@@ -31,9 +31,9 @@ func getTasksHandler(w http.ResponseWriter, r *http.Request) {
 
 	tasks, err := db.TasksWithSearch(limit, search)
 	if err != nil {
-		bl.WriteError(w, err, http.StatusInternalServerError)
+		bl.WriteJSONError(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	bl.WriteJSON(w, TasksResp{Tasks: tasks})
+	bl.WriteJSONSuccess(w, TasksResp{Tasks: tasks})
 }

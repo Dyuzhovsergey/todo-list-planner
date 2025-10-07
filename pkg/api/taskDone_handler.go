@@ -17,37 +17,37 @@ func doneTasksHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 	if id == "" {
-		bl.WriteError(w, fmt.Errorf("id task is empty"), http.StatusBadRequest)
+		bl.WriteJSONError(w, fmt.Errorf("id task is empty"), http.StatusBadRequest)
 		return
 	}
 
 	task, err := db.GetTask(id)
 	if err != nil {
-		bl.WriteError(w, err, http.StatusNotFound)
+		bl.WriteJSONError(w, err, http.StatusNotFound)
 		return
 	}
 
 	// если задача одноразовая — удаляем
 	if task.Repeat == "" {
 		if err := db.DeleteTask(id); err != nil {
-			bl.WriteError(w, err, http.StatusInternalServerError)
+			bl.WriteJSONError(w, err, http.StatusInternalServerError)
 			return
 		}
-		bl.WriteJSON(w, map[string]string{}) // {}
+		bl.WriteJSONSuccess(w, map[string]string{}) // {}
 		return
 	}
 
 	// если задача повторяющаяся — вычисляем следующую дату
 	next, err := bl.NextDate(time.Now(), task.Date, task.Repeat)
 	if err != nil {
-		bl.WriteError(w, err, http.StatusInternalServerError)
+		bl.WriteJSONError(w, err, http.StatusInternalServerError)
 		return
 	}
 
 	if err := db.UpdateDate(id, next); err != nil {
-		bl.WriteError(w, err, http.StatusInternalServerError)
+		bl.WriteJSONError(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	bl.WriteJSON(w, map[string]string{}) // {}
+	bl.WriteJSONSuccess(w, map[string]string{}) // {}
 }

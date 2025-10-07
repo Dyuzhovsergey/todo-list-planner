@@ -10,19 +10,24 @@ import (
 	"github.com/Dyuzhovsergey/todo-list-planner/pkg/db"
 )
 
-func WriteJSON(w http.ResponseWriter, data any) {
+func writeJSON(w http.ResponseWriter, status int, data any) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(status)
+
 	enc := json.NewEncoder(w)
 	enc.SetEscapeHTML(false)
+
 	if err := enc.Encode(data); err != nil {
 		log.Printf("WriteJSON error: %v", err)
 	}
 }
 
-func WriteError(w http.ResponseWriter, err error, status int) {
-	log.Println("error:", err)
-	w.WriteHeader(status)
-	WriteJSON(w, map[string]string{"error": err.Error()})
+func WriteJSONSuccess(w http.ResponseWriter, data any) {
+	writeJSON(w, http.StatusOK, data)
+}
+
+func WriteJSONError(w http.ResponseWriter, err error, code int) {
+	writeJSON(w, code, map[string]string{"error": err.Error()})
 }
 
 func CheckDate(task *db.Task) error {

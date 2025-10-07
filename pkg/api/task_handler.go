@@ -34,47 +34,47 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 	var task db.Task
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
 		log.Println("decode error:", err)
-		bl.WriteError(w, err, http.StatusBadRequest)
+		bl.WriteJSONError(w, err, http.StatusBadRequest)
 		return
 	}
 
 	if task.Title == "" {
-		bl.WriteError(w, fmt.Errorf("title task is empty"), http.StatusBadRequest)
+		bl.WriteJSONError(w, fmt.Errorf("title task is empty"), http.StatusBadRequest)
 		return
 	}
 
 	if err := bl.CheckDate(&task); err != nil {
-		bl.WriteError(w, err, http.StatusBadRequest)
+		bl.WriteJSONError(w, err, http.StatusBadRequest)
 		return
 	}
 
 	id, err := db.AddTask(&task)
 	if err != nil {
-		bl.WriteError(w, err, http.StatusInternalServerError)
+		bl.WriteJSONError(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	bl.WriteJSON(w, map[string]string{"id": strconv.FormatInt(id, 10)})
+	bl.WriteJSONSuccess(w, map[string]string{"id": strconv.FormatInt(id, 10)})
 }
 
 func getTaskHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	if id == "" {
-		bl.WriteError(w, fmt.Errorf("id task is empty"), http.StatusBadRequest)
+		bl.WriteJSONError(w, fmt.Errorf("id task is empty"), http.StatusBadRequest)
 		return
 	}
 
 	task, err := db.GetTask(id)
 	if err != nil {
 		if errors.Is(err, db.ErrTaskNotFound) {
-			bl.WriteError(w, fmt.Errorf("task not found"), http.StatusNotFound)
+			bl.WriteJSONError(w, fmt.Errorf("task not found"), http.StatusNotFound)
 		} else {
-			bl.WriteError(w, err, http.StatusInternalServerError)
+			bl.WriteJSONError(w, err, http.StatusInternalServerError)
 		}
 		return
 	}
 
-	bl.WriteJSON(w, task)
+	bl.WriteJSONSuccess(w, task)
 }
 
 func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
@@ -85,19 +85,19 @@ func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 	if id == "" {
-		bl.WriteError(w, fmt.Errorf("id task is empty"), http.StatusBadRequest)
+		bl.WriteJSONError(w, fmt.Errorf("id task is empty"), http.StatusBadRequest)
 		return
 	}
 
 	if err := db.DeleteTask(id); err != nil {
 		if errors.Is(err, db.ErrTaskNotFound) {
-			bl.WriteError(w, err, http.StatusNotFound)
+			bl.WriteJSONError(w, err, http.StatusNotFound)
 		} else {
-			bl.WriteError(w, err, http.StatusInternalServerError)
+			bl.WriteJSONError(w, err, http.StatusInternalServerError)
 		}
 		return
 	}
-	bl.WriteJSON(w, map[string]string{})
+	bl.WriteJSONSuccess(w, map[string]string{})
 }
 
 func updateTaskHandler(w http.ResponseWriter, r *http.Request) {
@@ -105,33 +105,33 @@ func updateTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	var task db.Task
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
-		bl.WriteError(w, fmt.Errorf("error parse JSON: %w", err), http.StatusBadRequest)
+		bl.WriteJSONError(w, fmt.Errorf("error parse JSON: %w", err), http.StatusBadRequest)
 		return
 	}
 
 	if task.ID == "" {
-		bl.WriteError(w, fmt.Errorf("id task is requared"), http.StatusBadRequest)
+		bl.WriteJSONError(w, fmt.Errorf("id task is requared"), http.StatusBadRequest)
 		return
 	}
 
 	if task.Title == "" {
-		bl.WriteError(w, fmt.Errorf("title task is empty"), http.StatusBadRequest)
+		bl.WriteJSONError(w, fmt.Errorf("title task is empty"), http.StatusBadRequest)
 		return
 	}
 
 	if err := bl.CheckDate(&task); err != nil {
-		bl.WriteError(w, fmt.Errorf("checkDate error: %w", err), http.StatusBadRequest)
+		bl.WriteJSONError(w, fmt.Errorf("checkDate error: %w", err), http.StatusBadRequest)
 		return
 	}
 
 	if err := db.UpdateTask(&task); err != nil {
 		if errors.Is(err, db.ErrTaskNotFound) {
-			bl.WriteError(w, err, http.StatusNotFound)
+			bl.WriteJSONError(w, err, http.StatusNotFound)
 		} else {
-			bl.WriteError(w, err, http.StatusInternalServerError)
+			bl.WriteJSONError(w, err, http.StatusInternalServerError)
 		}
 		return
 	}
 
-	bl.WriteJSON(w, map[string]string{})
+	bl.WriteJSONSuccess(w, map[string]string{})
 }
