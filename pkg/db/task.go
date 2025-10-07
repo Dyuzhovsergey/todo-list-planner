@@ -35,7 +35,7 @@ func GetTask(id string) (*Task, error) {
 	err := row.Scan(&t.ID, &t.Date, &t.Title, &t.Comment, &t.Repeat)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("task %s not found: %w", id, ErrTaskNotFound)
+			return nil, fmt.Errorf("task %s: %w", id, ErrTaskNotFound)
 		}
 		return nil, err
 	}
