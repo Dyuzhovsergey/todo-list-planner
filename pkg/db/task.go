@@ -103,7 +103,7 @@ func TasksWithSearch(limit int, search string) ([]*Task, error) {
 		// поиск: либо по дате (dd.mm.yyyy), либо по подстроке
 		if d, errDate := time.Parse("02.01.2006", search); errDate == nil {
 			searchDate := d.Format("20060102")
-			query := `SELECT id, date, title, omment, repeat
+			query := `SELECT id, date, title, comment, repeat
 			FROM scheduler
 			WHERE date = ?
 			LIMIT ?`
