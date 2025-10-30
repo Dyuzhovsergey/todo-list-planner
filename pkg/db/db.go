@@ -11,6 +11,7 @@ import (
 )
 
 var DB *sql.DB
+
 var ErrTaskNotFound = errors.New("task not found")
 
 const schema = `
